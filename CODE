@@ -1,0 +1,1642 @@
+
+
+
+# idold      left IDs
+# weekl       list of weeks (left)
+# idl:        list of id with 01(left ID)
+#sm5:         list of Heuristic of only week sum
+#sm:          list of last two digit 01 11 10
+#sm1:         list of heuristic 01 10 11 by adding 7
+#weekadd      list of weeks with added 01(left)
+
+
+#d            id left and week left(dictionary)
+
+#dd           link ids and last 2 digit
+
+#dictsort     link ids and heuristic of just belongs to by adding 7
+
+#beds and parking:      no of beds and parking in total
+
+#nlhsa and nspla        no of respective applicant already chosen
+
+#spla,lhsa              list of ids which already chosen
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+from operator import add
+from operator import sub
+
+import csv
+import operator
+import numpy as np
+
+
+file1=open("custom3.txt",'r')
+
+
+
+
+
+
+l=(file1.readlines())
+count=0
+
+l = map(lambda l: l.strip(), l)
+
+
+
+# Applicant info for LHSA
+
+
+beds=l[0]
+beds=int(beds)
+
+
+
+
+nlhsa=l[2]
+
+nlhsa=int(nlhsa)
+
+lhsa=l[3:3+nlhsa]
+
+
+
+
+parking=l[1]
+
+parking=int(parking)
+
+
+# applicant info for SPLA
+
+
+nspla=l[3+nlhsa]
+
+
+nspla=int(nspla)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+spla=l[4+nlhsa:4+nlhsa+nspla]
+
+
+
+
+info=l[nlhsa+nspla+5:]
+
+
+
+
+weekl=[]
+idl=[]
+idold=[]
+
+LHSAW=[]
+LHSAID=[]
+
+
+lcomplete=[]
+wcomplete=[]
+
+
+storagespla=[parking]*7
+
+storagelhsa=[beds]*7
+
+
+
+
+
+weekadd=[]
+
+
+
+
+def fun(lhsa,lhsao,spla,splao,chosen,choseno,lchosen,lchoseno,d,do,idleft,idlefto,weekleft,weeklefto,lc,lco,c,co,temp,templ,counter):
+
+
+
+
+
+
+
+
+
+
+
+    r=0
+    rr = 0
+
+    while (c or lc):
+
+
+
+
+        if(r==0 and not c):
+            break
+        if(not chosen):
+            break
+
+
+        if(c):
+
+
+            if (c[chosen[0]] < 0):
+
+                for k in lchosen:
+                    templ.append(k)
+                return
+
+
+
+            if (c[chosen[0]] > 0):
+
+                for kkkk in spla:
+                    if (kkkk != 0):
+                        rr = -1
+
+
+
+
+
+
+
+
+
+
+                if (rr == -1):
+
+                    flag = 0
+                    dw=[]
+
+                    dw.append(d[chosen[0]])
+                    num_list = ','.join(dw)
+                    dw=[]
+
+                    k = []
+                    for nn in num_list:
+                        nn = int(nn)
+                        k.append(nn)
+                    num_list=[]
+
+
+
+                    lnew=spla
+
+
+
+
+                    spla = list(map(operator.sub, spla, k))
+                    for b in spla:
+                        if (b < 0):
+                            flag=1
+
+                    if(flag!=1):
+
+
+                        temp.append(chosen[0])
+
+                        c = removekey(c, chosen)
+
+                        lc = removekey(lc, chosen)
+
+
+                        tt = chosen.pop(0)
+                        for lchos in lchosen:
+                            if (lchos == tt):
+                                lchosen.remove(lchos)
+
+                    else:
+                        spla=lnew
+                        chosen.pop(0)
+
+
+
+
+        r=0
+        flagg=-8
+
+        dw = []
+        lk = []
+
+        if(rr==0 and not lc):
+            break
+
+        if (lc):
+
+            if(lc[lchosen[0]]<0):
+                for kkk in lchosen:
+
+                    dw = []
+
+                    dw.append(d[lchosen[0]])
+                    num_list = ','.join(dw)
+                    dw = []
+
+                    k = []
+                    for nn in num_list:
+                        nn = int(nn)
+                        k.append(nn)
+                    num_list = []
+
+                    lnew=spla
+
+
+                    spla = list(map(operator.sub, spla, k))
+
+                    for bb in spla:
+                        if (bb < 0):
+                            flagg=1
+
+                    if(flagg!=1):
+
+
+                        temp.append(chosen[0])
+
+                    else:
+                        spla=lnew
+
+
+                return spla
+
+            if (lc[lchosen[0]] >= 0):
+
+
+                for kkk in lhsa:
+                    if(kkk!=0):
+                        r=-1
+
+
+
+                if(r==-1):
+
+
+                    flagl=0
+                    dw=[]
+
+                    dw.append(d[lchosen[0]])
+                    numl = ','.join(dw)
+                    for nnn in numl:
+                        nnn = int(nnn)
+                        lk.append(nnn)
+                    nnn=[]
+
+                    dw=[]
+                    lnewl=lhsa
+
+                    lhsa = list(map(operator.sub, lhsa, lk))
+
+                    for b in lhsa:
+                        if (b < 0):
+                            flagl=1
+                    if(flagl!=1):
+
+
+                        templ.append(lchosen[0])
+
+
+                        lc = removekey(lc, lchosen)
+                        c = removekey(c, lchosen)
+
+
+                        t = lchosen.pop(0)
+                        for chos in chosen:
+                            if (chos == t):
+                                chosen.remove(chos)
+
+
+                    else:
+                        lhsa=lnewl
+
+                        lchosen.pop(0)
+
+
+
+        if all(v == 0 for v in (spla)):
+
+            if all(t == 0 for t in (lhsa)):
+
+                break
+
+
+        if all(v == 0 for v in (spla)):
+            break
+
+
+    return spla
+
+
+
+
+
+
+
+def removekey(lc,lchosen):
+
+    if(lchosen):
+
+        r = dict(lc)
+        del r[lchosen[0]]
+    else:
+        return
+
+
+
+    return r
+
+
+
+
+
+
+for  i in info:
+
+
+
+    id=i[:5]
+    G=i[5]
+    A=i[6:9]
+    p=i[9]
+    MC=i[10]
+    C=i[11]
+    D=i[12]
+    W=i[13:21]
+
+    lcomplete.append(id)
+    wcomplete.append(W)
+
+
+    if(id not in lhsa and id not in spla):
+
+
+
+        idold.append(id)
+
+        weekl.append(W)
+    if(id in lhsa):
+        for thing in range(0,len(W)):
+            if(W[thing]=='1'):
+                storagelhsa[thing]=storagelhsa[thing]-1
+
+    if (id in spla):
+        for thing in range(0, len(W)):
+            if (W[thing] == '1'):
+                storagespla[thing] = storagespla[thing] - 1
+
+    if (G == 'F' and int(A) > int(17) and MC == 'N' and C == 'Y' and D == 'Y' and p=="N"):
+        if (id not in lhsa and id not in spla):
+            idl.append(id + '1'+'1')
+            weekadd.append(W+'1'+'1')
+
+
+
+
+    elif(MC=='N' and C=='Y' and D=='Y'):
+        if (id not in lhsa and id not in spla):
+            idl.append(id+'0'+'1')
+            weekadd.append(W+'0'+'1')
+
+
+    elif(G == 'F' and A > int(17) and p=="N"):
+        if (id not in lhsa and id not in spla):
+            idl.append(id+'1'+'0')
+            weekadd.append(W+'1'+'0')
+
+
+    else:
+        if (id not in lhsa and id not in spla):
+            idl.append(id+'0'+'0')
+            weekadd.append(W+'0'+'0')
+
+
+
+
+
+    count=count+1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+d = dict(zip(idold,weekl))
+
+
+sm=[]
+for e in idl:
+    sm.append(e[5:])
+
+sm1=[]
+
+
+for m in sm:
+    s = 0
+    m = int(m)
+
+    if (m == 11 or m == 01):
+        if (m == 11):
+            s = s + 2
+        while m:
+
+
+            m, remainder = divmod(m, 10)
+            s += remainder+10
+
+    elif(m==10):
+
+        s=-100
+    sm1.append(s)
+
+
+#   WEEK HEURISTIC
+flag1=-4
+sm5=[]
+summ=0
+for k in (weekl):
+    if(k=="1111111"):
+        flag1=0
+        for ttt in storagespla:
+            if(ttt!=1):
+                flag1=-1
+
+        if flag1==0:
+            summ=20
+        summ=summ+1
+    for j in range(0,len(k)):
+        y=int(k[j])
+
+        summ=summ+y
+
+
+
+    sm5.append(summ)
+    summ=0
+
+
+
+
+
+dd=dict(zip(idold,sm))
+
+
+
+
+dictsort=dict(zip(idold,sm1))
+
+#arrl=[[0]*7]*beds
+#arrs=[[0]*7]*parking
+
+np.arrl=np.zeros((beds,7))
+
+
+
+np.arrs=np.zeros((parking,7))
+
+#print("spla")
+
+#print(np.arrs)
+
+#print("lhsa")
+#print(np.arrl)
+
+
+
+
+a=[]
+a=wcomplete
+
+
+
+
+#a[:] = [x - 13 for x in a]
+
+#map(operator.sub, storagelhsa,wcomplete )
+
+
+
+
+
+
+
+
+
+
+import operator
+
+
+
+sox1=sorted(dictsort, key=dictsort.get)
+
+
+
+
+sorted_x = sorted(dictsort.items(), key=operator.itemgetter(1))
+
+
+
+
+
+
+
+
+from operator import add
+H=list( map(add, sm1, sm5) )
+
+
+ans=dict(zip(idold,H))
+
+
+ans1=sorted(ans, key=ans.get,reverse=True)
+
+
+
+
+
+
+
+
+
+# heuristic for lhsa
+
+lsm5=[]
+lsm1=[]
+for m in sm:
+    s = 0
+    m = int(m)
+
+    if (m == 11 or m == 10):
+        if (m == 11):
+            s = s + 2
+        while m:
+
+
+            m, remainder = divmod(m, 10)
+            s += remainder+10
+
+    elif(m==01):
+
+        s=-100
+    lsm1.append(s)
+
+
+flag2=-5
+lsm5=[]
+summ=0
+for k in (weekl):
+    if (k == "1111111"):
+        flag2 = 0
+        for ttt in storagelhsa:
+            if (ttt != 1):
+                flag2 = -1
+
+        if flag2 == 0:
+            summ = 20
+    for j in range(0,len(k)):
+        y=int(k[j])
+
+        summ=summ+y
+
+
+
+    lsm5.append(summ)
+    summ=0
+
+
+
+from operator import add
+lH=list( map(add, lsm1, lsm5) )
+
+
+lans=dict(zip(idold,lH))
+
+
+lans1=sorted(lans, key=lans.get,reverse=True)
+
+
+#########################################################################
+
+
+ans11=ans1[:]
+
+
+maxxx=ans[ans11[0]]
+newlist=[]
+
+for shashank in ans11:
+    if(ans[shashank]==maxxx):
+        newlist.append(shashank)
+
+
+
+newlistt=sorted(newlist)
+
+
+ans111=[]
+for rrr in ans11:
+    if(ans[rrr]>=0):
+        ans111.append(rrr)
+
+
+ans22=ans111[:]
+
+spp=storagespla[:]
+
+while(ans22):
+
+    dw=[]
+    k=[]
+    dw.append(d[ans22[0]])
+    numl = ','.join(dw)
+    for nnn in numl:
+        nnn = int(nnn)
+        k.append(nnn)
+    nnn=[]
+
+    dw=[]
+
+    spp = list(map(operator.sub, spp, k))
+    ans22.pop(0)
+
+tweet=[]
+
+lansdummy=lans1[:]
+
+for skm in lansdummy:
+    if(lans[skm]>0):
+        tweet.append(skm)
+
+
+
+
+
+
+
+
+
+
+file3 = open("output.txt", "w")
+
+if(all(v >= 0 for v in (spp)) or not tweet):
+
+    ansdummy=ans1[:]
+    ansdummy1=newlistt[0]
+
+    file3.write(ansdummy1)
+    file3.close()
+
+
+
+
+
+elif(count>10):
+
+
+
+
+############################################################################
+#lahsa heurist calculated
+
+
+
+
+    temp=[]
+    templ=[]
+
+    stspla=storagespla[:]
+    stlhsa=storagelhsa[:]
+    ans1t=ans1[:]
+    lans1t=lans1[:]
+    dt=d
+    idoldt=idold[:]
+    lanst=lans
+    anst=ans
+    weeklt=weekl[:]
+
+
+
+    n=[]
+    nl=[]
+    countv = len(ans1)
+
+    #if (countv >= 100):
+        #countv = 100
+
+    counter=0
+
+
+
+
+
+
+    templiststorage=[]
+    templiststoragel=[]
+    templist=[]
+    templist2=[]
+    for i in range(0, countv):
+
+        stlhsa=storagelhsa[:]
+        stspla=storagespla[:]
+        ans1t=ans1[:]
+        lans1t=lans1[:]
+        dt=d
+
+
+
+        if (counter >= 1):
+            ans1t = ans1[:]
+
+            f=0
+
+            for listt in ans1t:
+                if(listt<0):
+                    f=1
+            if(f!=1):
+                ans1t = ans1[:]
+
+                ans1t[0], ans1t[counter] = ans1[counter], ans1[0]
+                lans1t = lans1[:]
+
+            else:
+                lans1t = lans1[:]
+                ans1t=ans1[:]
+
+        n=fun(stlhsa,storagelhsa,stspla,storagespla,ans1t,ans1,lans1t,lans1,dt,d,idoldt,idold,weeklt,weekl,lanst,lans,anst,ans,temp,templ,counter)
+        counter=counter+1
+
+        templist.append(temp)
+        templist2.append(templ)
+
+        templiststorage.append(n)
+        temp=[]
+        templ=[]
+
+
+
+
+
+
+
+    #tempt=[]
+    #templt=[]
+    #print(fun(storagelhsa,storagespla,ans1,lans1,d,idold,weekl,lans,ans,tempt,templt))
+    p=[]
+
+
+
+    templs=[]
+    sum=0
+
+
+    for t in templiststorage:
+        if(t):
+            for tt in t:
+                sum=tt+sum
+
+            templs.append(sum)
+            sum=0
+
+        else:
+            templs.append(10000)
+
+
+
+
+    templs1=[]
+
+    for tt in templist:
+        if(tt):
+            templs1.append(tt[0])
+        else:
+            templs1.append(10000)
+
+
+
+    index=templs.index(min(templs))
+
+    val=min(templs)
+
+
+
+
+
+    zd=dict(zip(templs1,templs))
+
+
+
+
+    zd2=sorted(zd, key=zd.get)
+    zl=[]
+    for z in zd:
+        if(zd[z]==val):
+            zl.append(z)
+
+
+
+    localdict=ans
+    yyy=[]
+    for p in zl:
+        if p in localdict:
+            yyy.append(localdict[p])
+
+
+    dict_arrange=dict(zip(zl,yyy))
+
+    u=sorted(dict_arrange, key=dict_arrange.get,reverse=True)
+
+
+    m=max(yyy)
+
+    r=0
+    for tp in u:
+        if(dict_arrange[tp]==m):
+            r=tp
+
+
+
+
+
+    file3.write(templs1[index])
+    file3.close()
+
+
+elif(count<=10):
+    # idold      left IDs
+    # weekl       list of weeks (left)
+    # idl:        list of id with 01(left ID)
+    # sm5:         list of Heuristic of only week
+    # sm:          list of last two digit 01 11 10
+    # sm1:         list of heuristic 01 10 11 by adding 7
+    # weekadd      list of weeks with added 01(left)
+
+    # d            id left and week left(dictionary)
+
+    # dd           link ids and last 2 digit
+
+    # dictsort     link ids and heuristic of just belongs to by adding 7
+
+    # beds and parking:      no of beds and parking in total
+
+    # nlhsa and nspla        no of respective applicant already chosen
+
+    # spla,lhsa              list of ids which already chosen
+
+    from operator import add
+    from operator import sub
+
+    import csv
+    import operator
+    import numpy as np
+
+
+
+
+
+
+    weekl = []
+    idl = []
+    idold = []
+
+    LHSAW = []
+    LHSAID = []
+
+    lcomplete = []
+    wcomplete = []
+
+    storagespla = [parking] * 7
+
+    storagelhsa = [beds] * 7
+
+    weekadd = []
+
+
+    def fun(lhsa, spla, chosen, lchosen, d, temp, templ, lhsaused, splaused):
+
+        while (chosen or lchosen):
+
+            if (not chosen and not lchosen):
+                return temp, spla
+
+            flag = -1
+            flagl = -9
+
+            if (chosen):
+                flag = 0
+                dw = []
+
+                dw.append(d[chosen[0]])
+                num_list = ','.join(dw)
+
+                k = []
+                for nn in num_list:
+                    nn = int(nn)
+                    k.append(nn)
+
+                splaused = spla[:]
+                spla = list(map(operator.sub, spla, k))
+
+                for b in spla:
+                    if (b < 0):
+                        flag = 1
+
+                if (flag != 1):
+
+                    temp.append(chosen[0])
+
+                    t = chosen.pop(0)
+                    for chos in lchosen:
+                        if (chos == t):
+                            lchosen.remove(chos)
+
+                else:
+                    spla = splaused
+                    chosen.pop(0)
+
+            dw = []
+            lk = []
+            if (lchosen):
+                flagl = 0
+
+                dw.append(d[lchosen[0]])
+                numl = ','.join(dw)
+                for nnn in numl:
+                    nnn = int(nnn)
+                    lk.append(nnn)
+
+                lhsaused = lhsa[:]
+
+                lhsa = list(map(operator.sub, lhsa, lk))
+
+                for b in lhsa:
+                    if (b < 0):
+                        flagl = 1
+
+                if (flagl != 1):
+                    templ.append(lchosen[0])
+
+                    t = lchosen.pop(0)
+                    for chos in chosen:
+                        if (chos == t):
+                            chosen.remove(chos)
+
+
+                else:
+
+                    lhsa = lhsaused
+                    lchosen.pop(0)
+
+        return temp, spla
+
+
+    '''
+
+    def t(d,key,spla):
+
+        p=d[key]
+        p=int(p)
+
+        dw=[]
+
+        dw.append(d[key])
+        num_list = ','.join(dw)
+
+        k = []
+        for nn in num_list:
+            nn = int(nn)
+            k.append(nn)
+
+        n=k.count(1)
+
+        tt = list(map(operator.sub, spla, k))
+        if all(v >= 0 for v in (tt)):
+            return True,n
+        return False
+
+
+
+    def tree(lhsa, spla, chosen, lchosen, d, temp, templ, lhsaused, splaused):
+
+
+        spla_length=len(chosen)
+
+
+
+        listt=[]
+        l=chosen[:]
+        l2=lchosen[:]
+        fl=0
+        fl1=0
+        spaceleftspla=sum(spla)
+
+        spaceleftlhsa=sum(lhsa)
+
+        while(l or l2):
+
+            if(not l and l2):
+                for p in l2:
+                    listt.append(p)
+                break
+            if(l and not l2):
+                for q in l:
+                    listt.append
+                break
+
+            if(not l and not not l2):
+                break
+
+            for i in range(0,len(l)):
+
+                if(fl==0 and fl1==0):
+
+
+
+                    fl=0
+                 ##############   #################
+
+                    dw=[]
+                    dw.append(d[l[0]])
+                    num_list = ','.join(dw)
+
+                    k = []
+                    for nn in num_list:
+                        nn = int(nn)
+                        k.append(nn)
+
+                    countspla1 = k.count(1)
+
+                    subspla = list(map(operator.sub, spla, k))
+
+
+            ##############################################
+
+                    for i in range(0,len(l)):
+
+                        if all(v >= 0 for v in (subspla)):
+
+                            listt.append(l[0])
+
+                            spaceleftspla=spaceleftspla-countspla1
+                            tt=l.pop(i)
+                            for c in l2:
+                                if (c == tt):
+                                    l2.remove(c)
+
+                            break
+                        else:
+                            l.pop(i)
+
+    ##########################################################
+
+                    if(l2):
+                        dw=[]
+                        dw.append(d[l2[0]])
+                        num_list = ','.join(dw)
+
+                        k = []
+                        for nn in num_list:
+                            nn = int(nn)
+                            k.append(nn)
+
+                        countlhsa1 = k.count(1)
+
+                        sublhsa = list(map(operator.sub, lhsa, k))
+
+    ##############################################################
+
+                        for ii in range(0,len(l2)):
+                            if all(v >= 0 for v in (sublhsa)):
+
+                                spaceleftlhsa=spaceleftlhsa-countlhsa1
+                                fl1=0
+                                listt.append(l2[0])
+                                tt1 = l2.pop(i)
+                                for c in l:
+                                    if (c == tt1):
+                                        l.remove(c)
+                                break
+
+                            else:
+                                l2.pop(i)
+
+
+
+
+
+    '''
+
+    for i in info:
+
+
+        id = i[:5]
+        G = i[5]
+        A = i[6:9]
+        p = i[9]
+        MC = i[10]
+        C = i[11]
+        D = i[12]
+        W = i[13:21]
+
+        lcomplete.append(id)
+        wcomplete.append(W)
+
+        if (id not in lhsa and id not in spla):
+            idold.append(id)
+
+            weekl.append(W)
+        if (id in lhsa):
+            for thing in range(0, len(W)):
+                if (W[thing] == '1'):
+                    storagelhsa[thing] = storagelhsa[thing] - 1
+
+        if (id in spla):
+            for thing in range(0, len(W)):
+                if (W[thing] == '1'):
+                    storagespla[thing] = storagespla[thing] - 1
+
+        if (G == 'F' and int(A) > int(17) and p == "N" and MC == "N" and C == 'Y' and D == 'Y'):
+            if (id not in lhsa and id not in spla):
+                idl.append(id + '1' + '1')
+                weekadd.append(W + '1' + '1')
+
+
+
+
+        elif (MC == 'N' and C == 'Y' and D == 'Y'):
+            if (id not in lhsa and id not in spla):
+                idl.append(id + '0' + '1')
+                weekadd.append(W + '0' + '1')
+
+
+        elif (G == 'F' and A > int(17) and p == "N"):
+            if (id not in lhsa and id not in spla):
+                idl.append(id + '1' + '0')
+                weekadd.append(W + '1' + '0')
+
+
+        else:
+            if (id not in lhsa and id not in spla):
+                idl.append(id + '0' + '0')
+                weekadd.append(W + '0' + '0')
+
+        count = count + 1
+
+
+
+
+    d = dict(zip(idold, weekl))
+
+
+    sm = []
+    for e in idl:
+        sm.append(e[5:])
+
+    sm1 = []
+
+    dictsort = dict(zip(idold, sm))
+
+
+
+    a = []
+    a = wcomplete
+
+    # a[:] = [x - 13 for x in a]
+
+    # map(operator.sub, storagelhsa,wcomplete )
+
+
+
+    lhsalist = []
+
+    splalist = []
+
+    for i in dictsort:
+        if (dictsort[i] == "11" or dictsort[i] == "01"):
+            splalist.append((i))
+
+        if (dictsort[i] == "10" or dictsort[i] == "11"):
+            lhsalist.append(i)
+
+    onlyspla = []
+    onlylhsa = []
+    commonspla = []
+    commonlhsa = []
+    for ii in dictsort:
+        if (dictsort[ii] == "01"):
+            onlyspla.append((ii))
+
+        if (dictsort[ii] == "10"):
+            onlylhsa.append(ii)
+
+    for p in splalist:
+        if (p not in onlyspla):
+            commonspla.append(p)
+
+    for q in lhsalist:
+        if (q not in onlylhsa):
+            commonlhsa.append(q)
+
+
+
+    di = d
+    import random
+
+    lhs = lhsalist[:]
+    spl = splalist[:]
+    temp = []
+    templ = []
+    stlhsa = storagelhsa[:]
+    stspla = storagespla[:]
+
+    lhsaused = []
+    splaused = []
+
+
+    y = len(splalist)
+    yy = y - 1
+
+    '''def best(onlyspla, onlylhsa, commonspla, commonlhsa, d):
+        flag1 = -4
+
+        ll = []
+        onlys = []
+        cspla = []
+        clhsa = []
+        onlysp = []
+        sum = 0
+        for i in range(0, len(onlyspla)):
+            for k in (d[onlyspla[i]]):
+                kk = k
+                kk = int(kk)
+
+                sum = sum + kk
+
+            onlys.append(sum)
+            sum = 0
+
+        splad = dict(zip(onlyspla, onlys))
+        onlysplalist = sorted(splad, key=splad.get, reverse=True)
+
+        sum = 0
+        onlylh = []
+        for ii in range(0, len(onlylhsa)):
+            for k in (d[onlylhsa[ii]]):
+                kk = k
+                kk = int(kk)
+
+                sum = sum + kk
+
+            onlylh.append(sum)
+            sum = 0
+
+        lhsad = dict(zip(onlylhsa, onlylh))
+
+        onlylhsalist = sorted(lhsad, key=lhsad.get, reverse=True)
+
+        sum = 0
+        for t in range(0, len(commonspla)):
+            for k in (d[commonspla[t]]):
+                kk = k
+                kk = int(kk)
+
+                sum = sum + kk
+
+            cspla.append(sum)
+            sum = 0
+
+        sum = 0
+        for m in range(0, len(commonlhsa)):
+            for k in (d[commonlhsa[m]]):
+                kk = k
+                kk = int(kk)
+
+                sum = sum + kk
+
+            clhsa.append(sum)
+            sum = 0
+
+        cspladict = dict(zip(commonspla, clhsa))
+        clhsadict = dict(zip(commonlhsa, cspla))
+
+        common = sorted(cspladict, key=cspladict.get, reverse=True)
+        # commonlhsalist = sorted(clhsadict, key=clhsadict.get, reverse=True)
+
+        return common, onlylhsalist, onlysplalist
+
+    '''
+
+    y1 = spl[:]
+    y2 = lhs[:]
+
+    import itertools
+
+    # y1=list((itertools.permutations(spl)))
+    # y2=list((itertools.permutations(lhs)))
+
+    # print(y1)
+    # print(y2)
+
+    # y1=list(y1)
+    # y2=list(y2)
+    y11 = []
+    y22 = []
+    # for i in range(0,len(y1)):
+    # y11.append(list(y1[i]))
+    # for j in range(0,len(y2)):
+    # y22.append(list(y2[j]))
+
+    m = []
+
+    # for i in range(0,len(y1)):
+    # for j in range(0,len(y2)):
+
+    power = []
+    power2 = []
+    ttt = []
+
+
+    def permutation(start, end):
+        if end == start:
+            power.append(y1[:])
+
+        for i in range(start, end + 1):
+            y1[i], y1[start] = y1[start], y1[i]
+
+            permutation(start + 1, end)
+
+            y1[i], y1[start] = y1[start], y1[i]
+
+
+    t = len(y1)
+    permutation(0, t - 1)
+
+    t1 = len(y2)
+
+
+    def permutation1(start, end):
+        if end == start:
+            power2.append(y2[:])
+            return
+        for i in range(start, end + 1):
+            y2[i], y2[start] = y2[start], y2[i]
+
+            permutation1(start + 1, end)
+            y2[i], y2[start] = y2[start], y2[i]
+
+
+    permutation1(0, t1 - 1)
+    p1 = power[:]
+    p2 = power2[:]
+
+    ss = []
+    s = 0
+    queue = []
+    queuelist = []
+
+    if(count>8):
+    ######################
+        if (len(power) > 100):
+            power = power[0:40]
+
+        if (len(power2) > 100):
+            power2 = power2[0:30]
+
+    #######################
+
+
+    for i in range(0, len(power)):
+
+        for j in range(0, len(power2)):
+
+
+            x, y = (fun(stlhsa, stspla, p1[i][:], p2[j][:], d, temp, templ, lhsaused, splaused))
+
+            if (x not in queue):
+                z = tuple(x)
+                queue.append(z)
+                queuelist.append(x)
+                s = sum(y)
+                ss.append(s)
+
+            p1 = power[:]
+            p2 = power2[:]
+            stlhsa = storagelhsa[:]
+            stspla = storagespla[:]
+            temp = []
+            templ = []
+    x = 0
+    ss = list(ss)
+
+
+    queue1 = []
+
+    dc = dict(zip(queue, ss))
+
+    # =sorted(ans, key=ans.get,reverse=True)
+    sorted_x = sorted(dc.items(), key=operator.itemgetter(1))
+    m = min(ss)
+    lll = []
+    for i in range(0, len(queue)):
+        if (dc[queue[i]] == m):
+            lll.append(queue[i])
+
+    sett = list(set(lll))
+
+    nl = []
+    for i in sett:
+        i = list(i)
+        nl.append(i)
+
+    nl1 = []
+    nl2 = []
+    u = 0
+
+    pls = []
+    for xxx in nl:
+        nm = sorted(xxx)
+        pls.append(tuple(nm))
+
+    unique = set(pls)
+
+    comm = list(unique)
+    finall = []
+    for common in comm:
+        finall.append(list(common))
+
+    lists = []
+    listsc = []
+
+    sm5 = []
+    sum = 0
+    '''
+    for k in (weekl):
+
+        for j in range(0,len(k)):
+            y=int(k[j])
+
+            sum=sum+y
+
+
+
+        sm5.append(sum)
+        sum=0
+
+    print("sm5=",sm5)
+
+
+
+
+    zero1=[]
+    for m in sm:
+        s = 0
+        m = int(m)
+
+        if (m == 11 or m == 01):
+            if (m == 11):
+                s = s + 50
+            while m:
+
+
+                m, remainder = divmod(m, 10)
+                s += remainder+10
+
+        elif(m==10):
+
+            s=-100
+        zero1.append(s)
+
+
+
+    from operator import add
+    lH=list( map(add, zero1, sm5) )
+
+
+    H=dict(zip(idold,lH))
+
+
+
+    so=sorted(H, key=H.get,reverse=True)
+
+    '''
+    weeklic = []
+    weekli = []
+    jl = []
+    for s in finall:
+        for sha in s:
+            weekli.append(d[sha])
+            jl.append(sha)
+
+    sm5 = []
+
+    if (jl):
+
+        for k in (weekli):
+
+            for j in range(0, len(k)):
+                y = int(k[j])
+
+                sum = sum + y
+
+            sm5.append(sum)
+            sum = 0
+
+    dd3 = dict(zip(jl, sm5))
+
+
+    so = sorted(dd3, key=dd3.get, reverse=True)
+
+
+
+    for sss in so:
+        if (dictsort[sss] == "11"):
+            listsc.append(sss)
+
+
+        else:
+            lists.append(sss)
+
+    newlist10=[]
+    new100=[]
+
+
+
+    if (listsc):
+
+        r = listsc
+        max_xx=dd3[listsc[0]]
+        for shashank1 in r:
+            if(dd3[shashank1]==max_xx):
+                newlist10.append(shashank1)
+
+        newlist11=sorted(newlist10)
+
+
+
+
+
+        file3.write(r[0])
+        file3.close()
+
+
+    else:
+
+        r12=lists
+        ma=dd3[lists[0]]
+        for amazingshashank in r12:
+            if(dd3[amazingshashank]==ma):
+                new100.append(amazingshashank)
+
+        new101=sorted(new100)
+        file3.write(new101[0])
+        file3.close()
+
+
+
